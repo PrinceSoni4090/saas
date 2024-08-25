@@ -37,10 +37,8 @@ const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
     const getFullVideoUrl = useCallback((publicId: string) => {
         return getCldVideoUrl({
             src: publicId,
-           width: 400,
-           height: 225,  
-           rawTransformations: 
-           ["e_preview:duration_15:max_seg_9:min_seg_dur_1"]      
+            width: 1920,
+            height: 1080, 
         })
     }, [])
 
@@ -48,9 +46,10 @@ const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
     const getPreviewVideoUrl = useCallback((publicId: string) => {
         return getCldVideoUrl({
             src: publicId,
-           width: 1920,
-           height: 1080,
-            
+           width: 400,
+           height: 225,  
+           rawTransformations: 
+           ["e_preview:duration_15:max_seg_9:min_seg_dur_1"] 
         })
     }, [])
 
@@ -78,8 +77,8 @@ const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
       };
 
 
-  return (
-    <div
+      return (
+        <div
           className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
