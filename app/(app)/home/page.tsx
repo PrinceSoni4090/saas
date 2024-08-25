@@ -43,19 +43,19 @@ function Home() {
     
   }, [])
 
-  const handleDelete = useCallback(async (id: string) => {
-    try {
-      const response = await axios.delete(`/api/video-delete?id=${id}`);
-      if (response.status === 200) {
-        setVideos((prevVideos) => prevVideos.filter((video) => video.id !== id));
-      } else {
-        throw new Error('Failed to delete the video');
-      }
-    } catch (error) {
-      console.error('Error deleting video:', error);
-      setError('Failed to delete video');
-    }
-  }, []);
+  // const handleDelete = useCallback(async (id: string) => {
+  //   try {
+  //     const response = await axios.delete(`/api/video-delete?id=${id}`);
+  //     if (response.status === 200) {
+  //       setVideos((prevVideos) => prevVideos.filter((video) => video.id !== id));
+  //     } else {
+  //       throw new Error('Failed to delete the video');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error deleting video:', error);
+  //     setError('Failed to delete video');
+  //   }
+  // }, []);
 
   if (loading) {
     return <div>Loading...</div>
@@ -76,7 +76,7 @@ function Home() {
                   key={video.id}
                   video={video}
                   onDownload={handleDownload}
-                  onDelete = {handleDelete}
+                  
               />
           ))
         }

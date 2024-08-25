@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import relativeTime from "dayjs/plugin/relativeTime"
 import {filesize} from "filesize"
 import { Video } from '@/types'
-import { FiTrash, FiTrash2 } from 'react-icons/fi'
+
 
  
 
@@ -15,10 +15,10 @@ dayjs.extend(relativeTime)
 interface VideoCardProps {
     video: Video
     onDownload: (url: string, title: string) => void;
-    onDelete: (id: string) => void
+    
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({video, onDownload, onDelete}) => {
+const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
 
     const[isHovered, setIsHovered] = useState(false)
     const [previewError, setPreviewError] = useState(false)
