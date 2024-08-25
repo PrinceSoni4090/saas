@@ -1,10 +1,11 @@
 import React,{useState, useEffect, useCallback} from 'react'
 import { getCldImageUrl, getCldVideoUrl } from 'next-cloudinary'
-import { Download, Clock, FileUp, FileDown } from 'lucide-react'
+import { Download, Clock, FileUp, FileDown, Delete, RemoveFormatting } from 'lucide-react'
 import dayjs from 'dayjs'
 import relativeTime from "dayjs/plugin/relativeTime"
 import {filesize} from "filesize"
 import { Video } from '@/types'
+import { FiTrash, FiTrash2 } from 'react-icons/fi'
 
  
 
@@ -14,9 +15,10 @@ dayjs.extend(relativeTime)
 interface VideoCardProps {
     video: Video
     onDownload: (url: string, title: string) => void;
+    onDelete: (id: string) => void
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
+const VideoCard: React.FC<VideoCardProps> = ({video, onDownload, onDelete}) => {
 
     const[isHovered, setIsHovered] = useState(false)
     const [previewError, setPreviewError] = useState(false)
@@ -148,6 +150,12 @@ const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
               >
                 <Download size={16} />
               </button>
+              {/* <button
+          className="btn btn-danger btn-sm bg-red-900"
+          onClick={() => onDelete(video.id)}
+        >
+          <FiTrash2 size={16} />
+        </button> */}
             </div>
           </div>
         </div>

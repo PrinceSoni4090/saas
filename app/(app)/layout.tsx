@@ -31,11 +31,12 @@ export default function AppLayout({
   const { user } = useUser();
 
   const handleLogoClick = () => {
-    router.push("/");
+    router.push("/home");
   };
 
   const handleSignOut = async () => {
     await signOut();
+    router.push("/home")
   };
 
   return (
@@ -60,7 +61,7 @@ export default function AppLayout({
               </label>
             </div>
             <div className="flex-1">
-              <Link href="/" onClick={handleLogoClick}>
+              <Link href="/home" onClick={handleLogoClick}>
                 <div className="btn btn-ghost normal-case text-2xl font-bold tracking-tight cursor-pointer">
                   Cloudinary Showcase
                 </div>
@@ -83,7 +84,7 @@ export default function AppLayout({
                     {user.username || user.emailAddresses[0].emailAddress}
                   </span>
                   <button
-                    onClick={handleSignOut}
+                    onClick={handleSignOut} 
                     className="btn btn-ghost btn-circle"
                   >
                     <LogOutIcon className="h-6 w-6" />
