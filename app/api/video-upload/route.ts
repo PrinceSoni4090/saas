@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     try {
 
-        const{userId} =auth()
+        const{userId} = auth()
 
     if(!userId){
         return NextResponse.json({error: "Unauthorized"},{status:401})
