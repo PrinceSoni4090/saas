@@ -107,6 +107,15 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+export const config = {
+    api: {
+      bodyParser: {
+        sizeLimit: '100mb', // or set to a larger value if needed
+      },
+    },
+  };
+  
+
 interface CloudinaryUploadResult {
   public_id: string;
   [key: string]: any;
