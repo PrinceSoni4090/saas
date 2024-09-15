@@ -81,8 +81,7 @@ import VideoCard from '@/components/VideoCard'
 import { Video } from '@/types'
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
-import { BackgroundLines } from '@/components/ui/background-lines'
-import { Cover } from '@/components/ui/cover'
+
 
 export default function Home() {
   const [videos, setVideos] = useState<Video[]>([])
@@ -93,9 +92,10 @@ export default function Home() {
     try {
       const response = await fetch("/api/videos")
       if (!response.ok) {
-        throw new Error("Failed to fetch videos")
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
       const data = await response.json()
+      console.log("Fetched data:", data); // Add this line for debugging
 
       if (Array.isArray(data)) {
         setVideos(data)
@@ -103,7 +103,7 @@ export default function Home() {
         throw new Error("Unexpected response format")
       }
     } catch (error) {
-      console.error(error)
+      console.error("Error fetching videos:", error)
       setError("Failed to fetch videos")
     } finally {
       setLoading(false)

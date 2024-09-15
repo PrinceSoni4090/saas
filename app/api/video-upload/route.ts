@@ -168,10 +168,12 @@ export async function POST(request: NextRequest) {
                 originalSize: originalSize,
                 compressedSize: String(result.bytes),
                 duration: result.duration || 0,
-                // url: result.secure_url, // Add this line
-                // userId, // Add this line to associate the video with the user
+                // url: result.secure_url,
+                // userId,
             }
         })
+
+        console.log("Created video:", video); // Add this line for debugging
 
         return NextResponse.json(video)
     } catch (error) {
