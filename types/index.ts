@@ -9,5 +9,6 @@ export interface Video {
     duration: number
     createdAt: Date
     updatedAt: Date
-
+    url:  String  
+    userId :        String
 }
