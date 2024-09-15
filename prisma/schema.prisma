@@ -23,5 +23,4 @@ model video{
   duration      Float
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
-  url          String   // Add this line
 }

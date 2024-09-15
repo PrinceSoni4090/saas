@@ -79,12 +79,16 @@
 //             originalSize: originalSize,
 //             compressedSize: String(result.bytes),
 //             duration: result.duration || 0,
+//             url: result.secure_url, // Add this line
+//             userId: userId, // Add this line
 //         }
 //     })
+//     console.log("Created video:", video); // Add this line for debugging
+
 //     return NextResponse.json(video)
 
 //     } catch (error) {
-//         console.log("Upload video failed", error);
+//         console.error("Upload video failed", error); // Change to console.error
 //         return NextResponse.json({error: "upload video failed"}, {status: 500})
         
 //     } finally {
@@ -183,7 +187,6 @@ export async function POST(request: NextRequest) {
         await prisma.$disconnect()
     }
 }
-
 
 
 
