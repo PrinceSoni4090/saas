@@ -463,7 +463,7 @@ export default function Component({
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0">
               <SheetHeader className="border-b p-4">
-                <SheetTitle>CloudifyMedia</SheetTitle>
+                <SheetTitle>Cloudify Media</SheetTitle>
               </SheetHeader>
               {isLoaded && isSignedIn && user && (
                 <div className="flex items-center space-x-4 p-4">
@@ -503,7 +503,7 @@ export default function Component({
           >
             {/* <ImagePlus className="h-6 w-6" /> */}
             <span className="hidden text-2xl font-bold sm:inline-block">
-              CloudifyMedia
+              Cloudify Media
             </span>
           </Link>
           
