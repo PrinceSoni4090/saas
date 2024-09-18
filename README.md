@@ -96,8 +96,4 @@ It's designed to help users optimize their media content for sharing and storage
 
 ## Contributing
 
-(Include guidelines for contributing to the project)
-
-## License
-
-(Specify the license under which the project is released)
+Contributions are welcome! Please feel free to submit a Pull Request.
