@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Cloudify Media",
-  description: "Crop and compress your media with AI",
+  description: "Crop and Compress your Media with AI",
 };
 
 export default function RootLayout({
