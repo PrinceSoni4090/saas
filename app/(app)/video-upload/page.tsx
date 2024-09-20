@@ -138,22 +138,23 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Download } from "lucide-react"
-import { FileUpload } from '@/components/ui/file-upload' 
-import { toast } from 'react-hot-toast' 
+import { Download, AlertCircle } from "lucide-react"
+import { FileUpload } from '@/components/ui/file-upload'
+import { toast } from 'react-hot-toast'
 import Link from 'next/link'
 import { Progress } from "@/components/ui/progress"
 
-function VideoUpload() {
+export default function VideoUpload() {
   const [file, setFile] = useState<File | null>(null)
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [previewError, setPreviewError] = useState<string | null>(null)
   const videoPreviewRef = useRef<HTMLDivElement>(null)
 
-  const MAX_FILE_SIZE = 70 * 1024 * 1024
+  const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB
 
   const handleFileUpload = async (files: File[]) => {
     if (files.length > 0) {
@@ -161,7 +162,13 @@ function VideoUpload() {
       setFile(selectedFile)
 
       if (selectedFile.size > MAX_FILE_SIZE) {
-        toast.error("File size too large")
+        toast.error("File size too large. Maximum size is 100MB.")
+        return
+      }
+
+      const allowedTypes = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-ms-wmv']
+      if (!allowedTypes.includes(selectedFile.type)) {
+        toast.error("Invalid file type. Please upload a valid video file.")
         return
       }
 
@@ -172,6 +179,7 @@ function VideoUpload() {
   const handleSubmit = async (selectedFile: File) => {  
     setIsUploading(true)
     setUploadProgress(0)
+    setPreviewError(null)
     const formData = new FormData()
     formData.append("file", selectedFile)
     formData.append("title", title || selectedFile.name)
@@ -201,6 +209,10 @@ function VideoUpload() {
       videoPreviewRef.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [videoUrl])
+
+  const handleVideoError = () => {
+    setPreviewError("Unable to preview this video. You can still download it.")
+  }
 
   return (
     <div className="container mx-auto p-2 max-w-3xl">
@@ -260,10 +272,17 @@ function VideoUpload() {
               <CardTitle className="text-2xl">Video Preview</CardTitle>
             </CardHeader>
             <CardContent>
-              <video className="w-full rounded-lg" controls>
-                <source src={videoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              {previewError ? (
+                <div className="flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 rounded-lg p-4">
+                  <AlertCircle className="w-6 h-6 text-yellow-500 mr-2" />
+                  <p>{previewError}</p>
+                </div>
+              ) : (
+                <video className="w-full rounded-lg" controls onError={handleVideoError}>
+                  <source src={videoUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
               <div className="mt-4">
                 <h3 className="text-lg font-semibold">{title || file?.name}</h3>
                 <p className="text-sm text-muted-foreground">{description}</p>
@@ -283,5 +302,3 @@ function VideoUpload() {
     </div>
   )
 }
-
-export default VideoUpload

@@ -92,7 +92,7 @@
 // }
 
 import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, UploadApiOptions } from "cloudinary";
 import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 
@@ -111,6 +111,9 @@ interface CloudinaryUploadResult {
     bytes: number
     duration?: number
     secure_url: string
+    format: string
+    width: number
+    height: number
 }
 
 export async function POST(request: NextRequest) {
@@ -139,20 +142,45 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "File not found" }, { status: 400 })
         }
 
+        const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+        if (file.size > MAX_FILE_SIZE) {
+            return NextResponse.json({ error: "File size exceeds the maximum limit of 100MB." }, { status: 400 });
+        }
+
+        const allowedTypes = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-ms-wmv'];
+        if (!allowedTypes.includes(file.type)) {
+            return NextResponse.json({ error: "Invalid file type. Please upload a valid video file." }, { status: 400 });
+        }
+
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes)
 
+        const uploadOptions: UploadApiOptions = {
+            resource_type: "video" as const,
+            folder: "video-uploads",
+            transformation: [
+                { quality: "auto", fetch_format: "mp4" },
+                { codec: "h264" },
+                { audio_codec: "aac" }
+            ],
+            eager: [
+                { format: "mp4", transformation: [
+                    { width: 640, crop: "scale" },
+                    { quality: "auto" }
+                ]}
+            ],
+            eager_async: true,
+            eager_notification_url: "https://your-api.com/cloudinary-notification-endpoint" // Replace with your actual endpoint
+        };
+
         const result = await new Promise<CloudinaryUploadResult>((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
-                {
-                    resource_type: "video",
-                    folder: "video-uploads",
-                    transformation: [
-                        { quality: "auto", fetch_format: "mp4" },
-                    ]
-                },
+                uploadOptions,
                 (error, result) => {
-                    if (error) reject(error);
+                    if (error) {
+                        console.error("Cloudinary upload error:", error);
+                        reject(new Error(`Cloudinary upload failed: ${error.message}`));
+                    }
                     else resolve(result as CloudinaryUploadResult);   
                 }
             )
@@ -167,6 +195,9 @@ export async function POST(request: NextRequest) {
                 originalSize: originalSize,
                 compressedSize: String(result.bytes),
                 duration: result.duration || 0,
+                // format: result.format,
+                // width: result.width,
+                // height: result.height,
                 // url: result.secure_url,
                 // userId,
             }
@@ -176,7 +207,10 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             ...video,
-            url: result.secure_url
+            url: result.secure_url,
+            format: result.format,
+            width: result.width,
+            height: result.height
         })
     } catch (error) {
         console.error("Upload video failed", error);
